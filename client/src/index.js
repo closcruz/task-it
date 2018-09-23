@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import TaskBox from './Container/TaskBox';
+import TaskFrame from './Components/TaskFrame';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<TaskBox />, document.getElementById('root'));
+ReactDOM.render(<TaskFrame />, document.getElementById('root'));
 registerServiceWorker();
