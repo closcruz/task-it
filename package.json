@@ -1,0 +1,33 @@
+{
+  "name": "task-it",
+  "version": "1.0.0",
+  "description": "Building a todo/task app built with MERN stack",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "@closcruz/task-it"
+  },
+  "keywords": [
+    "MERN",
+    "nodejs",
+    "express",
+    "react",
+    "mongoDB"
+  ],
+  "author": "Carlos Cruz Ramos",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "body-parser": "^1.18.3",
+    "concurrently": "^4.0.1",
+    "express": "^4.16.3",
+    "mongoose": "^5.2.16",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.4"
+  }
+}

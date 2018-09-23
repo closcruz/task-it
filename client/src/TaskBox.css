@@ -1,0 +1,9 @@
+.singleTask {
+    text-align: center;
+    max-width: 100px;
+    padding: 2px 0 5px 0;
+    font-size: 12px;
+    line-height: 5px;
+    border-bottom: 4px solid #006837;
+    background-color: #E4C178;
+}
