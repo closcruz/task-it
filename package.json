@@ -4,7 +4,10 @@
   "description": "Building a todo/task app built with MERN stack",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:server": "cd backend && nodemon server.js --exec babel-node --presets env,stage-0",
+    "start:client": "cd client && yarn start",
+    "start:dev": "concurrently \"yarn start:server\" \"yarn start:client\""
   },
   "repository": {
     "type": "git",
