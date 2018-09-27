@@ -14,8 +14,7 @@ const Task = props => (
 
 Task.propTypes = {
     name: PropTypes.string.isRequired,
-    numTasks: PropTypes.number.isRequired,
-    dueBy: PropTypes.string,
+    dueBy: PropTypes.string.isRequired,
 };
 
 export default Task;
