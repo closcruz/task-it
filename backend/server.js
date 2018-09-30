@@ -50,6 +50,6 @@ router.post('/tasks', (req, res) => {
     });
 });
 
-app.use('/', router);
+app.use('/api', router);
 
 app.listen(API_PORT, () => console.log(`Connected to port ${API_PORT}`));
