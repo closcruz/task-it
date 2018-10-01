@@ -41,7 +41,7 @@ const RegisterForm = props => (
 
 RegisterForm.propTypes = {
     email: PropTypes.string,
-    user: PropTypes.string,
+    username: PropTypes.string,
     password: PropTypes.string,
     handleReg: PropTypes.func.isRequired,
     txtChange: PropTypes.func.isRequired,

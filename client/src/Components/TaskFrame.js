@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import TaskBox from '../Container/TaskBox';
+import RegisterBox from '../Container/RegisterBox';
 // import logo from '../taskiticon.png';
 
 class TaskFrame extends Component {
@@ -22,7 +23,7 @@ class TaskFrame extends Component {
                     </div>
                     <div className="frameContent">
                         <Route path="/yourtask" component={TaskBox}/>
-
+                        <Route path="/signup" component={RegisterBox}/>
                     </div>
                 </div>
             </Router>
