@@ -1,6 +1,5 @@
 // Root of the Task application that contains a users tasks and lists.
 import React, { Component } from 'react';
-import 'whatwg-fetch';
 import TaskList from '../Components/TaskList';
 import ItemList from '../Components/ItemList';
 import TaskForm from '../Components/TaskForm';

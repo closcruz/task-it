@@ -4,7 +4,8 @@ import logger from 'morgan';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import passport from 'passport';
-import LocalStrategy from 'passport-local';
+import {Strategy, ExtractJwt} from 'passport-jwt'
+import jwt from 'jsonwebtoken';
 import Item from './models/item';
 import Task from './models/task';
 import User from './models/user'
@@ -42,39 +43,43 @@ router.get('/fail', (req, res) => {
     res.json({message: 'Failed to login'})
 });
 
-// Serialization and deserialization of User
-passport.serializeUser((user, done) => {
-    done(null, user._id);
-});
-
-passport.deserializeUser((id, done) => {
-    db.collection('users').findOne(
-        {_id: mongoose.Types.ObjectId(id)},
-        (err, doc) => {
-            done(null, doc);
-        }
-    );
-});
-
 // Setting up local strategy for passport
-passport.use(new LocalStrategy(
-    function (username, password, done) {
-        db.collection('users').findOne({username: username}, (err, user) => {
-            console.log("User: " + username + " attempted to log in.");
-            if (err) return done(err);
-            if (!user) return done(null, false);
-            if (password !== user.password) return done(null, false);
-            return done(null, user);
-        });
+const opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
+opts.secretOrKey = process.env.JWT_SECRET;
+passport.use(new Strategy(opts, (jwt_payload, done) => {
+    User.findOne({id: jwt_payload.id}, (err, user) => {
+        if (err) return done(err, false);
+        if (user) return done(null, user);
+        return done (null, false);
+    });
+}));
+
+function getToken (headers) {
+    if (headers && headers.authorization) {
+        const parted = headers.authorization.split(' ');
+        if (parted.length === 2) {
+            return parted[1];
+        } else {
+            return null;
+        }
+    } else {
+        return null;
     }
-));
+}
 
 // GET call to get tasks
-router.get('/tasks', (req, res) => {
-    Task.find((err, tasks) => {
-        if (err) return res.json({success: false, error: err});
-        return res.json({success: true, data: tasks});
-    });
+router.get('/tasks', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const token = getToken(req.headers);
+    if (token) {
+        Task.find((err, tasks) => {
+            if (err) return next(err);
+            return res.json({success: true, data: tasks});
+        });
+    }
+    else {
+        return res.status(403).send({success: false, msg: 'Unauthorized'});
+    }
 });
 
 // POST call to add a task
@@ -97,13 +102,27 @@ router.post('/tasks', (req, res) => {
 });
 
 // POST call for login authentication
-router.post('/login', passport.authenticate('local', {failureRedirect: '/api/fail'}), (req, res) => {
-    res.redirect('/api');
+router.post('/login', (req, res) => {
+    const {username, pass} = req.body;
+    User.findOne({username: username}, (err, user) => {
+        if (err) throw err;
+        if (!user) res.status(401).send({success: false, msg: 'Log in failed, User not found.'});
+        user.comparePassword(pass, (err, matches) => {
+            if (matches && !err) {
+                // If user found and password is correct, create token
+                const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
+                // Return user info and token as JSON
+                res.json({success: true, token: 'JWT' + token});
+            }
+            else {
+                res.status(401).send({success: false, msg: 'Log in failed. Wrong password'});
+            }
+        });
+    });
 });
 
 // POST to register a new user
 router.post('/user', (req, res) => {
-    const user = new User();
     const {email, username, password} = req.body;
     if (!email || !username || !password) {
         // Throw error if missing one of inputs
@@ -112,9 +131,11 @@ router.post('/user', (req, res) => {
             error: 'Need all inputs filled to make an account'
         });
     }
-    user.email = email;
-    user.username = username;
-    user.password = password;
+    const user = new User({
+        email: email,
+        username: username,
+        password: password
+    });
     user.save(err => {
         if (err) return res.json({success: false, error: err});
         return res.json({success: true});
