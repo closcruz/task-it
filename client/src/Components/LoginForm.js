@@ -21,6 +21,7 @@ const LoginForm = props => (
                 type="password"
                 name="password"
                 placeholder="Your Password"
+                value={props.password}
                 onChange={props.txtChange}
             />
         </label>
@@ -30,12 +31,14 @@ const LoginForm = props => (
 
 LoginForm.propTypes = {
     username: PropTypes.string,
+    password: PropTypes.string,
     handleLogin: PropTypes.func.isRequired,
     txtChange: PropTypes.func.isRequired,
 };
 
 LoginForm.defaultProps = {
-    username: ''
+    username: '',
+    password: '',
 };
 
 export default LoginForm;

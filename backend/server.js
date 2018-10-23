@@ -103,11 +103,11 @@ router.post('/tasks', (req, res) => {
 
 // POST call for login authentication
 router.post('/login', (req, res) => {
-    const {username, pass} = req.body;
+    const {username, password} = req.body;
     User.findOne({username: username}, (err, user) => {
         if (err) throw err;
         if (!user) res.status(401).send({success: false, msg: 'Log in failed, User not found.'});
-        user.comparePassword(pass, (err, matches) => {
+        user.comparePassword(password, (err, matches) => {
             if (matches && !err) {
                 // If user found and password is correct, create token
                 const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
