@@ -4,8 +4,13 @@ const Schema = mongoose.Schema;
 
 // Schema for a task that will hold multiple items that a user will tracks
 const TaskSchema = new Schema({
-    name: String,
+    name: {
+        type: String,
+        required: true
+    },
+    numTasks: Number,
     due: String,
+    item_ids: [],
 }, {timestamps: true});
 
 

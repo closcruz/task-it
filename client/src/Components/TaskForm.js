@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 
 const TaskForm = props => (
-    <form onSubmit={props.submitTask}>
+    <form onSubmit={props.submitTodo}>
         <input
             type="text"
             name="taskName"

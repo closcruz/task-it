@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 
 const ItemForm = props => (
-    <form onSubmit={props.submitItem}>
+    <form onSubmit={props.submitTodo}>
         <input
             type="text"
             name="itemName"

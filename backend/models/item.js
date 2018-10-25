@@ -3,7 +3,10 @@ const Schema = mongoose.Schema;
 
 // Item schema that represents items in a task
 const ItemSchema = new Schema({
-    name: String,
+    name: {
+        type: String,
+        required: true
+    },
     due: String,
 }, {timsestamps: true});
 

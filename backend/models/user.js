@@ -13,6 +13,7 @@ const UsersSchema = new Schema({
         type: String,
         required: true
     },
+    list_ids: [],
 }, {timestamps: true});
 
 UsersSchema.pre('save', function (next) {

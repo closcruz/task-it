@@ -68,13 +68,32 @@ function getToken (headers) {
     }
 }
 
+function getUserId (headers) {
+    if (headers && headers.authorization) {
+        const parted = headers.authorization.split(' ');
+        if (parted.length === 2) {
+            const decoded = jwt.verify(parted[1], process.env.JWT_SECRET);
+            User.findOne({_id: decoded.id}, (err, user) => {
+                if (err) throw err;
+                return user._id;
+            })
+        } else {
+            return null
+        }
+    } else {
+        return null;
+    }
+}
+
 // GET call to get tasks
 router.get('/tasks', passport.authenticate('jwt', {session: false}), (req, res) => {
     const token = getToken(req.headers);
+    const id = getUserId(req.headers);
+    console.log(id);
     if (token) {
         Task.find((err, tasks) => {
             if (err) return next(err);
-            return res.json({success: true, data: tasks});
+            return res.json({success: true, data: tasks, id: id});
         });
     }
     else {
@@ -112,7 +131,7 @@ router.post('/login', (req, res) => {
                 // If user found and password is correct, create token
                 const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
                 // Return user info and token as JSON
-                res.json({success: true, token: 'JWT' + token});
+                res.json({success: true, token: 'JWT ' + token});
             }
             else {
                 res.status(401).send({success: false, msg: 'Log in failed. Wrong password'});
