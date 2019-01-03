@@ -8,7 +8,7 @@ const TaskForm = props => (
             type="text"
             name="taskName"
             placeholder="Task Name"
-            value={props.taskName}
+            value={props.name}
             onChange={props.txtChange}
         /><br/>
         <input

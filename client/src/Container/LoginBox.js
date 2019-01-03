@@ -25,7 +25,7 @@ class LoginBox extends Component {
         e.preventDefault();
 
         const {username, password} = this.state;
-        axios.post('/api/login', {username, password})
+        axios.post('/auth/login', {username, password})
             .then((result) => {
                 localStorage.setItem('jwtToken', result.data.token);
                 this.props.history.push('/yourtask')

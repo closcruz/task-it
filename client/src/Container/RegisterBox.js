@@ -28,7 +28,7 @@ class RegisterBox extends Component {
 
         const {email, username, password} = this.state;
         if (!email || !username || !password) return;
-        axios.post('/api/user', {email, username, password})
+        axios.post('/auth/register', {email, username, password})
             .then((result) => {
                 this.props.history.push("/login")
             });

@@ -24,7 +24,7 @@ class TaskBox extends Component {
 
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
-        axios.get('/api/tasks')
+        axios.get('/tasks/view')
             .then(res => {
                 this.setState({data: res.data});
                 console.log(this.state.data);
@@ -44,22 +44,39 @@ class TaskBox extends Component {
         this.setState(newState);
     };
 
+    submitTodo = (e) => {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
+        e.preventDefault();
 
+        const {name, dueBy} = this.state;
+        axios.post('/tasks/add', {name, dueBy})
+            .then(res => {
+                if (!res.success) this.setState({error: res.error.message || res.error});
+                else this.setState({name: '', dueBy: '', error: null});
+            })
+            .catch((err) => {
+                if (err.response.status === 401) {
+                    this.props.history.push('/login');
+                } else {
+                    console.log(err);
+                }
+            })
+    };
 
     render() {
         return (
             <div className="container">
                 <div className="tasks">
                     <h3>Your Tasks</h3>
-                    <TaskList data={DATA}/>
+                    <TaskList data={this.state.data}/>
                 </div>
                 <div className="items">
                     <h3>Your Items To-do</h3>
                     <ItemList items={ITEM}/>
                 </div>
                 <div className="testForms">
-                    <TaskForm/>
-                    <ItemForm/>
+                    <TaskForm txtChange={this.txtChange} submitTask={this.submitTodo}/>
+                    <ItemForm txtChange={this.txtChange} submitItem={this.submitTodo}/>
                 </div>
             </div>
         );
